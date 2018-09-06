@@ -471,8 +471,6 @@ namespace LMS.Controllers
         }
 
 
-        /*******Begin code to modify********/
-
         /// <summary>
         /// Create a new user of the LMS with the specified information.
         /// Assigns the user a unique uID consisting of a 'u' followed by 7 digits.
@@ -485,7 +483,6 @@ namespace LMS.Controllers
         /// <returns>A unique uID. This uID must not be used by anyone else</returns>
         public string CreateNewUser(string fName, string lName, DateTime DOB, string SubjectAbbrev, string role)
         {
-            // done, unchecked
 
             int id = db.Professor.Count() + db.Student.Count() + db.Administrator.Count() + 1;
 
@@ -506,8 +503,7 @@ namespace LMS.Controllers
                 admin.UId = uid;
                 admin.Pwd = "";
 
-                // TODO: Added updates to db. Confirm this is correct.
-                // -- Matt
+            
                 db.Administrator.Add(admin);
 
             }
@@ -521,8 +517,7 @@ namespace LMS.Controllers
                 prof.UId = uid;
                 prof.Password = "";
 
-                // TODO: Added updates to db. Confirm this is correct.
-                // -- Matt
+                
                 db.Professor.Add(prof);
 
             }
@@ -536,27 +531,24 @@ namespace LMS.Controllers
                 student.UId = uid;
                 student.Pwd = "";
 
-                // TODO: Added updates to db. Confirm this is correct.
-                // -- Matt
+                
                 db.Student.Add(student);
 
             }
 
-            // TODO: Added updates to db. Confirm this is correct.
-            // -- Matt
+            
             try
             {
                 db.SaveChanges();
             }
             catch (Exception e)
             {
-                // TODO: What to do here? Probably nothing.
+                
             }
 
             return uid;
         }
 
-        /*******End code to modify********/
 
         #region Helpers
 
