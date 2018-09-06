@@ -1,0 +1,126 @@
+﻿
+@{
+    ViewData["Title"] = "ClassListings";
+    Layout = "~/Views/Shared/StudentLayout.cshtml";
+}
+
+<h4 id="classname">ClassListings</h4>
+
+<div id="departmentDiv" class="col-md-12">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title"></h3>
+    </div>
+    <div class="panel-body">
+      <table id="tblClasses" class="table table-bordered table-striped table-responsive table-hover">
+        <thead>
+          <tr>
+            <th align="left" class="productth">Semester</th>
+            <th align="left" class="productth">Location</th>
+            <th align="left" class="productth">Time</th>
+            <th align="left" class="productth">Instructor</th>
+          </tr>
+        </thead>
+        @*<tbody></tbody>*@
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+@section Scripts
+  {
+  <script type="text/javascript">
+
+    LoadData();
+
+    function PopulateTable(tbl, offerings) {
+      var newBody = document.createElement("tbody");
+
+      //courses.sort(function (a, b) {
+      //  return parseInt(a.number) - parseInt(b.number);
+
+      //});
+
+      $.each(offerings, function (i, item) {
+        var tr = document.createElement("tr");
+
+        var td = document.createElement("td");
+        td.appendChild(document.createTextNode(item.season + " " + item.year));
+        tr.appendChild(td);
+
+        var td = document.createElement("td");
+        td.appendChild(document.createTextNode(item.location));
+        tr.appendChild(td);
+
+        var td = document.createElement("td");
+        td.appendChild(document.createTextNode(item.start + " - " + item.end));
+        tr.appendChild(td);
+
+        var td = document.createElement("td");
+        td.appendChild(document.createTextNode(item.lname + ", " + item.fname));
+        tr.appendChild(td);
+
+        newBody.appendChild(tr);
+      });
+
+      //var newTable = newDiv.getElementsByClassName("table")[0];
+      tbl.appendChild(newBody);
+      //newTable.appendChild(newBody);
+
+    }
+
+    function LoadData() {
+
+      //classname.innerText = '@User.Identity.Name';
+      classname.innerText = 'Offerings of @ViewData["subject"] @ViewData["num"]';
+
+      var tbl = document.getElementById("tblClasses");
+
+      $.ajax({
+        type: 'POST',
+        url: '@Url.Action("GetClassOfferings", "Common")',
+        dataType: 'json',
+        data: { subject: '@ViewData["subject"]', number: Number('@ViewData["num"]') },
+        success: function (data, status) {
+
+          PopulateTable(tbl, data);
+
+          //alert(JSON.stringify(data));
+
+
+          //$.each(data, function (i, item) {
+          //  var newDiv = MakeDepartmentTable();
+          //  SetDepartmentName(newDiv, item.subject + ": " + item.dname);
+          //  var newTable = newDiv.getElementsByClassName("table")[0];
+          //  PopulateTable(newTable, item.courses, item.subject);
+          //  //SetDepartmentName(newDiv, "f");
+          //  //var newTable = newDiv.getElementsByClassName("table")[0];
+          //  //PopulateTable(newTable);
+
+          //  prevNode.parentNode.insertBefore(newDiv, prevNode.nextSibling);
+          //  prevNode = newDiv;
+          //});
+          
+        },
+        error: function (ex) {
+          var r = jQuery.parseJSON(response.responseText);
+          alert("Message: " + r.Message);
+          alert("StackTrace: " + r.StackTrace);
+          alert("ExceptionType: " + r.ExceptionType);
+        }
+        });
+
+
+    }
+
+
+
+  </script>
+
+}
+
+
+
+
