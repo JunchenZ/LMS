@@ -78,17 +78,7 @@ namespace LMS.Controllers {
       return View();
     }
 
-    /*******Begin code to modify********/
-
-    // TODO: Many of the following queries are only slight modifications of one
-    // another. Many of them are also surprisingly long. What are some
-    // alternative solutions?
-
-    // TODO: Is it possible and/or reasonable to return a query from a method?
-    // For example, there are several instances where the same query is
-    // written with only a few modifications to the last couple of lines. This
-    // is the case when searching for a specific 'Class' instance from only
-    // the subject, course number, season, and year.
+    
 
     /// <summary>
     /// Returns a JSON array of all the students in a class.
@@ -181,9 +171,7 @@ namespace LMS.Controllers {
                    // for this class.
                    select new { assignments, categories };
 
-      // TODO: The fact that the 'var' keyword must be defined when declared
-      // makes the following if-else block rather repetitive. Is there a
-      // solution to avoid the repetition?
+     
 
       JsonResult result;
       if (category != null) {
@@ -292,9 +280,7 @@ namespace LMS.Controllers {
                   // will belong.
                   select classes.ClassId;
 
-      // TODO: See the same questions about a similar code block within the
-      // 'CreateAssignment' method.
-
+      
       AsgnCategory asgnCategory = new AsgnCategory();
       asgnCategory.CatId = db.AsgnCategory.Count() + 1;
       asgnCategory.Name = category;
@@ -364,13 +350,7 @@ namespace LMS.Controllers {
                   // will belong.
                   select categories.CatId;
 
-      // TODO: Is there any particular reason to simply change the 'Assignment'
-      // table to auto-increment the 'AId' column? When is the
-      // 'db.Assignment.Count() + 1' actually reading from the database? Is this
-      // any slower than having the column auto-increment?
-
-      // TODO: 'FirstOrDefault' vs. 'First'. Is there an instance where the
-      // above query will be empty?
+      
 
       Assignment assignment = new Assignment();
       assignment.AId = db.Assignment.Count() + 1;
@@ -391,9 +371,7 @@ namespace LMS.Controllers {
       try {
         db.SaveChanges();
 
-        // TODO: Is this the best place for a call to updateGrade?
-        // TODO: Modify updateGrade to take the classId and the uID as the parameter
-
+        
         foreach (string uid in query3) {
           UpdateGrade(subject, num, season, year, uid);
         }
@@ -522,10 +500,7 @@ namespace LMS.Controllers {
                   on categories.CatId equals assignments.CatId
                   where assignments.Name == asgname
 
-                  // TODO: Did we decide to allow multiple submissions?
-                  // Or was this something we changed in the ER model
-                  // beforehand?
-
+                 
                   // Search for all submissions by the given student. At
                   // this point there should only be a single submission
                   // for the given assignment.
@@ -535,37 +510,13 @@ namespace LMS.Controllers {
 
                   select submissions;
 
-      // TODO: In the case where a row already exists for a given table,
-      // and that row requires 1 or more columns be updated, is there ever
-      // a need for an anonymous class? Either way, what exactly is the
-      // problem when a query such as follows is iterated over in the
-      // foreach loop, attempting to update the specified columns?
-      // 
-      // select new {
-      //          submissions.UId,
-      //          submissions.Score,
-      //          submissions.AId
-      //        };
-      //
-      // foreach (...) { // update cols };
-      //
-      // In other words, how do I make the following code work with
-      // anonymous types? Or is this never necessary?
+      
 
       foreach (Submission s in query) {
         s.Score = score;
       }
 
-      // TODO: What is the difference between 'SaveChanges' and 'SubmitChanges'?
-      // The following works just fine but online examples suggest the latter.
       
-      // TODO: What is the scope of the local database? For example, would it be
-      // possible to invoke 'UpdateGrades' before 'SaveChanges' and simply leave
-      // out the invocation of 'SaveChanges' within the 'UpdateGrades' method?
-      // What is the best practice? Also, confirm that 'UpdateGrades' will not
-      // be called here if there is an exception thrown from 'SaveChanges' before
-      // calling 'UpdateGrades'.
-
       try {
         db.SaveChanges(); // Update score for this assignment.
         UpdateGrade(subject, num, season, year, uid); // Update class grade.
@@ -618,11 +569,7 @@ namespace LMS.Controllers {
     /// <param name="uid">The uid of the student who's grade is being updated</param>
     private void UpdateGrade(string subject, int num, string season, int year, string uid) {
 
-      // TODO: For a more efficient execution, update this method to take the
-      // class ID and student's uID as the only two parameters.
-
-      // TODO: Should the max grade be the weight of that category if there are
-      // no assignments in the other categories?
+      
 
       // This query contains a single row representing this class. The class ID
       // will be used to query the assignment categories for this class
@@ -705,13 +652,9 @@ namespace LMS.Controllers {
                    where enrollments.UId == uid
                    select enrollments;
 
-      // Convert to letter grade here?
       query5.First().Grade = (int)numericGradeTotal;
 
-      // TODO: Would it be better to place this in a try-catch here and return
-      // false on error? This would be redirecting to another try-catch outside
-      // this method. What is best?
-
+     
       db.SaveChanges(); // Update the database with the new numeric grade.
     }
 
