@@ -14,7 +14,7 @@ namespace LMS.Models.LMSModels
         public string Name { get; set; }
         public string Contents { get; set; }
         public DateTime Due { get; set; }
-        public sbyte SType { get; set; }
+        public bool SType { get; set; }
         public int Points { get; set; }
         public int CatId { get; set; }
 

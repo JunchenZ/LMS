@@ -19,6 +19,7 @@
             <th align="left" class="productth">Location</th>
             <th align="left" class="productth">Time</th>
             <th align="left" class="productth">Instructor</th>
+            <th align="left" class="productth">Options</th>
           </tr>
         </thead>
         @*<tbody></tbody>*@
@@ -34,6 +35,42 @@
   <script type="text/javascript">
 
     LoadData();
+
+    function Enroll(_season, _year) {
+
+      $.ajax({
+        type: 'POST',
+        url: '@Url.Action("Enroll", "Student")',
+        dataType: 'json',
+
+        data: {
+          subject: '@ViewData["subject"]',
+          num: Number('@ViewData["num"]'),
+          season: _season,
+          year: _year,
+          uid: '@User.Identity.Name',
+          },
+        success: function (data, status) {
+          //alert(JSON.stringify(data));
+          if (data.success === undefined) {
+            alert("Unknown response from controller");
+          }
+          else if (data.success == true) {
+            alert("Successfully enrolled in class");
+          }
+          else{
+            alert("Unable to enroll in class");
+          }
+        },
+        error: function (ex) {
+          var r = jQuery.parseJSON(response.responseText);
+          alert("Message: " + r.Message);
+          alert("StackTrace: " + r.StackTrace);
+          alert("ExceptionType: " + r.ExceptionType);
+        }
+        });
+
+    }
 
     function PopulateTable(tbl, offerings) {
       var newBody = document.createElement("tbody");
@@ -62,18 +99,23 @@
         td.appendChild(document.createTextNode(item.lname + ", " + item.fname));
         tr.appendChild(td);
 
+        var td = document.createElement("td");
+        var a = document.createElement("a");
+        a.setAttribute("href", "javascript:Enroll('" + item.season + "', '" + item.year + "')");
+        a.appendChild(document.createTextNode("enroll"));
+        td.appendChild(a);
+        tr.appendChild(td);
+
+
         newBody.appendChild(tr);
       });
 
-      //var newTable = newDiv.getElementsByClassName("table")[0];
       tbl.appendChild(newBody);
-      //newTable.appendChild(newBody);
 
     }
 
     function LoadData() {
 
-      //classname.innerText = '@User.Identity.Name';
       classname.innerText = 'Offerings of @ViewData["subject"] @ViewData["num"]';
 
       var tbl = document.getElementById("tblClasses");
@@ -88,20 +130,6 @@
           PopulateTable(tbl, data);
 
           //alert(JSON.stringify(data));
-
-
-          //$.each(data, function (i, item) {
-          //  var newDiv = MakeDepartmentTable();
-          //  SetDepartmentName(newDiv, item.subject + ": " + item.dname);
-          //  var newTable = newDiv.getElementsByClassName("table")[0];
-          //  PopulateTable(newTable, item.courses, item.subject);
-          //  //SetDepartmentName(newDiv, "f");
-          //  //var newTable = newDiv.getElementsByClassName("table")[0];
-          //  //PopulateTable(newTable);
-
-          //  prevNode.parentNode.insertBefore(newDiv, prevNode.nextSibling);
-          //  prevNode = newDiv;
-          //});
           
         },
         error: function (ex) {
@@ -111,16 +139,7 @@
           alert("ExceptionType: " + r.ExceptionType);
         }
         });
-
-
     }
 
-
-
   </script>
-
 }
-
-
-
-

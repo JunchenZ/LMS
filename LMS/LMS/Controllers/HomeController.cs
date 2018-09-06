@@ -9,43 +9,46 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace LMS.Controllers
 {
-  public class HomeController : CommonController
-  {
-
-    public IActionResult Index()
+    public class HomeController : CommonController
     {
-      if(User.IsInRole("Student"))
-      {
-        return Redirect("/Student/Index");
-      }
-      if(User.IsInRole("Professor"))
-      {
-        return Redirect("/Professor/Index");
-      }
 
-      return View();
+        public IActionResult Index()
+        {
+            if (User.IsInRole("Student"))
+            {
+                return Redirect("/Student/Index");
+            }
+            if (User.IsInRole("Professor"))
+            {
+                return Redirect("/Professor/Index");
+            }
+            if (User.IsInRole("Administrator"))
+            {
+                return Redirect("/Administrator/Index");
+            }
+            return View();
+        }
+
+
+        public IActionResult About()
+        {
+            ViewData["Message"] = "Your application description page.";
+
+            return View();
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Contact()
+        {
+            ViewData["Message"] = "Your contact page.";
+
+            return View();
+        }
+
+
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
-
-
-    public IActionResult About()
-    {
-      ViewData["Message"] = "Your application description page.";
-
-      return View();
-    }
-
-    [Authorize(Roles = "Administrator")]
-    public IActionResult Contact()
-    {
-      ViewData["Message"] = "Your contact page.";
-
-      return View();
-    }
-
-
-    public IActionResult Error()
-    {
-      return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-  }
 }
