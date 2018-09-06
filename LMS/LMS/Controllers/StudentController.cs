@@ -52,7 +52,6 @@ namespace LMS.Controllers
         }
 
 
-        /*******Begin code to modify********/
 
         /// <summary>
         /// Returns a JSON array of the classes the given student is enrolled in.
@@ -68,7 +67,6 @@ namespace LMS.Controllers
         /// <returns>The JSON array</returns>
         public IActionResult GetMyClasses(string uid)
         {
-            // done, unchecked
 
             var query = from s in db.Student where s.UId == uid // to check
                         join e in db.Enrolled on s.UId equals e.UId
@@ -103,7 +101,6 @@ namespace LMS.Controllers
         /// <returns>The JSON array</returns>
         public IActionResult GetAssignmentsInClass(string subject, int num, string season, int year, string uid)
         {
-            //done, unchecked
 
 
             var query1 = from c in db.Course // to check
@@ -129,32 +126,7 @@ namespace LMS.Controllers
 
             return Json(query2.ToArray());
 
-            //var query1 = from c in db.Course // to check
-            //             where c.Subject == subject && c.Number == num
-            //             join clas in db.Class on c.CourseId equals clas.CourseId
-            //             where clas.Season == season && clas.Year == year
-            //             join cat in db.AsgnCategory on clas.ClassId equals cat.ClaId
-            //             into join1
-            //             from j in join1.DefaultIfEmpty()
-            //             join a in db.Assignment on j.CatId equals a.CatId
-            //             into join2
-            //             from j2 in join2.DefaultIfEmpty()
-            //             select j2;
-
-            //var query2 = from q in query1
-            //             join s in db.Submission on
-            //             new { A = q.AId, B = uid } equals new { A = s.AId, B = s.UId }
-            //             into join1
-            //             from j in join1.DefaultIfEmpty()
-            //             select new
-            //             {
-            //                 aname = q.Name,
-            //                 cname = q.Cat.Name,
-            //                 due = q.Due,
-            //                 score = j == null ? (uint?) null : (uint?)j.Score
-            //             };
-
-            //return Json(query2.ToArray());
+            
         }
 
 
@@ -174,7 +146,6 @@ namespace LMS.Controllers
         /// <returns>A JSON object containing {success = true/false}</returns>
         public IActionResult SubmitAssignmentText(string subject, int num, string season, int year, string category, string asgname, string uid, string contents)
         {
-            //done, unchecked
 
             var query = from c in db.Course
                         where c.Subject == subject && c.Number == num
@@ -232,7 +203,7 @@ namespace LMS.Controllers
                         where e.UId == uid
                         select clas;
 
-            if (query.Count() != 0) // to check
+            if (query.Count() != 0) 
             {
                 return Json(new { success = false });
             }
@@ -244,7 +215,7 @@ namespace LMS.Controllers
                         select clas;
 
             Enrolled en = new Enrolled();
-            en.ClaId = query2.First().ClassId; // to check
+            en.ClaId = query2.First().ClassId; 
             en.UId = uid;
             en.Grade = -1;
             db.Add(en);
@@ -271,7 +242,6 @@ namespace LMS.Controllers
         /// <returns>A JSON object containing a single field called "gpa" with the number value</returns>
         public IActionResult GetGPA(string uid)
         {
-            // done, unchecked
 
             var query = from e in db.Enrolled where e.UId == uid
                         select e.Grade;
@@ -310,152 +280,14 @@ namespace LMS.Controllers
                     GPA = 0.7;
                 else
                     GPA = 0;
-                //if (grade == "A")
-                //    GPA += 4;
-                //else if (grade == "A-")
-                //    GPA += 3.7;
-                //else if (grade == "B+")
-                //    GPA += 3.3;
-                //else if (grade == "B")
-                //    GPA += 3.0;
-                //else if (grade == "B-")
-                //    GPA += 2.7;
-                //else if (grade == "C+")
-                //    GPA += 2.3;
-                //else if (grade == "C")
-                //    GPA += 2.0;
-                //else if (grade == "C-")
-                //    GPA += 1.7;
-                //else if (grade == "D+")
-                //    GPA += 1.3;
-                //else if (grade == "D")
-                //    GPA += 1;
-                //else if (grade == "D-")
-                //    GPA += 0.7;
+               
 
             }
 
             return Json(new { gpa = GPA / classCount });
 
-            //foreach (var cla in query)
-            //{
-            //    var query2 = from ac in db.AsgnCategory where ac.ClaId == cla
-            //                 select ac;
-
-            //    int allCats = 0;
-            //    double numericGradeTotal = 0;
-
-            //    foreach (var cat in query2)
-            //    {
-            //        var query3 = from a in db.Assignment where a.CatId == cat.CatId
-            //                     select a;
-
-            //        int catTotalPoints = 0, catEarned = 0;
-
-            //        foreach (var assign in query3)
-            //        {
-            //            var query4 = from a in db.Assignment where a.AId == assign.AId
-            //                         select a;
-
-            //            catTotalPoints += query4.First().Points;
-
-            //            var query5 = from s in db.Submission
-            //                         where s.AId == assign.AId && s.UId == uid
-            //                         select s;
-
-            //            if (query5.Count() != 0)
-            //                catEarned += query5.First().Score;
-
-            //        }
-
-            //        if (catTotalPoints == 0)
-            //            continue;
-
-            //        double catPercent = (catEarned / catTotalPoints);
-            //        double catScore = catPercent * cat.Weight;
-            //        numericGradeTotal += catScore;
-            //        allCats += cat.Weight;
-            //    }
-            //    if (allCats == 0)
-            //        continue;
-
-            //    numericGradeTotal *= (100 / allCats);
-            //    GPA += numericGradeTotal;  // to check
-            //    classCount += 1;
-            //}
-
-            //if (classCount == 0)
-            //    return Json(new { gpa = 0 });
-
-            //GPA /= classCount;
-
-            //if (GPA >= 93)
-            //    GPA = 4.0;
-            //else if (GPA >= 90)
-            //    GPA = 3.7;
-            //else if (GPA >= 87)
-            //    GPA = 3.3;
-            //else if (GPA >= 83)
-            //    GPA = 3.0;
-            //else if (GPA >= 80)
-            //    GPA = 2.7;
-            //else if (GPA >= 77)
-            //    GPA = 2.3;
-            //else if (GPA >= 73)
-            //    GPA = 2.0;
-            //else if (GPA >= 70)
-            //    GPA = 1.7;
-            //else if (GPA >= 67)
-            //    GPA = 1.3;
-            //else if (GPA >= 63)
-            //    GPA = 1.0;
-            //else if (GPA >= 60)
-            //    GPA = 0.7;
-            //else
-            //    GPA = 0;
-
-            //return Json(new { gpa = GPA });
-
-
-            //var query = from e in db.Enrolled
-            //            where e.UId == uid
-            //            select e.Grade;
-
-            //int count = 0;
-            //double grade = 0;
-
-
-            //foreach (var v in query)
-            //{
-            //    string s = v.ToString();
-
-            //    if (s == "--")
-            //        continue;
-
-            //    if (s == "A")
-            //        grade += 4;
-            //    else if (s == "A-")
-            //        grade += 3.7;
-            //    else if (s == "B+")
-            //        grade += 3.3;
-            //    else if (s == "B")
-            //        grade += 3.0;
-            //    else if (s == "B-")
-            //        grade += 2.7;
-            //    else if (s == "C+")
-            //        grade += 2.3;
-            //    else if (s == "C")
-            //        grade += 2.0;
-            //    else if (s == "C-")
-            //        grade += 1.7;
-            //    else if (s == "D")
-            //        grade += 1;
-            //    else if (s == "D-")
-            //        grade += 0.7;
-
-            //    count++;
-            //}
-            //return Json(new { gpa = grade / count });
+            
+           
         }
 
     }
