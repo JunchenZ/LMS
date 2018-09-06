@@ -111,7 +111,6 @@ namespace LMS.Controllers {
     /// <returns>A JSON object containing {success = true/false}. False if another class occupies the same location during any time within the start-end range in the same semester.</returns>
     public IActionResult CreateClass(string subject, int number, string season, int year, TimeSpan start, TimeSpan end, string location, string instructor) {
 
-      // TODO: Test and confirm changing DateTime to TimeSpan for the start and end arguments is okay.
 
       var query = from departments in db.Department
                   join courses in db.Course
