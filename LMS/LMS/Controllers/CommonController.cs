@@ -11,27 +11,16 @@ namespace LMS.Controllers
     public class CommonController : Controller
     {
 
-        // TODO: Add a protected database context variable once you have scaffolded your team database
-        // for example: 
+         
         protected Team7Context db;
 
         public CommonController()
         {
-            // TODO: Initialize your context once you have scaffolded your team database
-            // for example:
+            
             db = new Team7Context();
         }
 
-        /*
-         * WARNING: This is the quick and easy way to make the controller
-         *          use a different Context - good enough for our purposes.
-         *          The "right" way is through Dependency Injection via the constructor (look this up if interested).
-        */
-
-        // TODO: Add a "UseContext" method if you wish to change the "db" context for unit testing
-        //       See the lecture on testing
-
-        // TODO: Uncomment this once you have created the variable "db"
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -41,7 +30,6 @@ namespace LMS.Controllers
             base.Dispose(disposing);
         }
 
-        /*******Begin code to modify********/
 
 
         /// <summary>
@@ -52,7 +40,6 @@ namespace LMS.Controllers
         /// <returns>The JSON array</returns>
         public IActionResult GetDepartments()
         {
-            // done, unchecked
 
             var query = from d in db.Department
                         select new { name = d.Name, subject = d.Subject };
@@ -74,7 +61,6 @@ namespace LMS.Controllers
         /// <returns>The JSON array</returns>
         public IActionResult GetCatalog()
         {
-            //done, unchecked
 
             var query = from d in db.Department
                         join c in db.Course on d.Subject equals c.Subject
@@ -110,7 +96,6 @@ namespace LMS.Controllers
         /// <returns></returns>
         public IActionResult GetClassOfferings(string subject, int number)
         {
-            //done, unchecked
 
             var query = from c in db.Course
                         where c.Number == number && c.Subject == subject
@@ -144,7 +129,6 @@ namespace LMS.Controllers
         /// <returns>The assignment contents</returns>
         public IActionResult GetAssignmentContents(string subject, int num, string season, int year, string category, string asgname)
         {
-            // done, unchecked
 
             var query = from c in db.Course
                         where c.Subject == subject && c.Number == num
@@ -174,7 +158,6 @@ namespace LMS.Controllers
         /// <returns>The submission text</returns>
         public IActionResult GetSubmissionText(string subject, int num, string season, int year, string category, string asgname, string uid)
         {
-            // done, unchecked
 
             var query = from c in db.Course
                         where c.Subject == subject && c.Number == num
@@ -188,7 +171,7 @@ namespace LMS.Controllers
                         where s.UId == uid
                         select s;
 
-            if (query.Count() == 0) // to check
+            if (query.Count() == 0) 
             {
                 return Content("");
             }
@@ -212,7 +195,6 @@ namespace LMS.Controllers
         /// <returns>The user JSON object or an object containing {success: false} if the user doesn't exist</returns>
         public IActionResult GetUser(string uid)
         {
-            // done, unchecked
 
             var query = from a in db.Administrator
                         where a.UId == uid
@@ -239,7 +221,7 @@ namespace LMS.Controllers
                              department = d.Name
                          };
 
-            if (query2.Count() != 0) // to check
+            if (query2.Count() != 0) 
             {
                 return Json(query2.First());
             }
@@ -263,7 +245,6 @@ namespace LMS.Controllers
             return Json(new { success = false });
         }
 
-        /*******End code to modify********/
 
     }
 }
